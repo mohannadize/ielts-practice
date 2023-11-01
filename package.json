@@ -1,0 +1,28 @@
+{
+  "name": "ielts-practice",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun src/index.tsx",
+    "dev": "bun --watch src/index.tsx",
+    "generate": "drizzle-kit generate:sqlite",
+    "migrate": "bun drizzle/migrate.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@elysiajs/html": "^0.7.3",
+    "@kitajs/ts-html-plugin": "^1.3.0",
+    "@libsql/client": "^0.3.6",
+    "@t3-oss/env-nextjs": "^0.7.1",
+    "better-sqlite3": "^9.0.0",
+    "drizzle-kit": "^0.19.13",
+    "drizzle-orm": "^0.28.6",
+    "elysia": "^0.7.21",
+    "openai": "^4.14.2"
+  }
+}
