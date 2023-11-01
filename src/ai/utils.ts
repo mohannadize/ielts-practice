@@ -1,6 +1,8 @@
 import env from "@/env.mjs";
+import { essayType } from "@drizzle/schema";
 import OpenAI from "openai";
 import { APIPromise } from "openai/core.mjs";
+import wait from "wait";
 
 const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY,
@@ -139,10 +141,7 @@ export const gradeEssay = async (question: string, answer: string) => {
     content: SYSTEM_MESSAGE
   });
 
-  const promises: Promise<{
-    taskTitle: string;
-    result: string;
-  }>[] = [];
+  const results: essayType["aiResponse"] = [];
 
   for (const task of gradingSteps) {
     const taskMessages = [...messages];
@@ -154,26 +153,19 @@ export const gradeEssay = async (question: string, answer: string) => {
       content: formattedPrompt,
     });
 
-    const p = new Promise<{
-      taskTitle: string;
-      result: string;
-    }>(async (res) => {
-      const {choices: [response]} = await openai.chat.completions.create({
-        messages: taskMessages,
-        model: 'gpt-3.5-turbo',
-        max_tokens: 100
-      });
+    const { choices: [response] } = await openai.chat.completions.create({
+      messages: taskMessages,
+      model: 'gpt-3.5-turbo',
+      max_tokens: 100
+    });
 
-      return res({
-        taskTitle,
-        result: response?.message.content ?? "An error has occured"
-      });
+    await wait(20000);
+    
+    results.push({
+      taskTitle,
+      result: response?.message.content ?? "An error has occured"
     })
-
-    promises.push(p);``
   }
-
-  const results = await Promise.all(promises)
 
   return results;
 }

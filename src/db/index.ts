@@ -12,17 +12,12 @@ export const db = drizzle(client, { schema });
 export async function gradeEssays() {
   const essays = await db.select().from(schema.essays).where(isNull(schema.essays.aiResponse));
   
-  const promises : Promise<void>[] = [];
   for (const essay of essays) {
-    promises.push(new Promise(resolve => {
-      return gradeEssay(essay.question, essay.answer).then(aiResponse => {
-        return db.update(schema.essays).set({
-          aiResponse: aiResponse
-        }).where(eq(schema.essays.id, essay.id)).run();
-      }).then(() => resolve());
-    }))
+    const aiResponse = await gradeEssay(essay.question, essay.answer);
+    await db.update(schema.essays).set({
+      aiResponse: aiResponse
+    }).where(eq(schema.essays.id, essay.id)); 
   }
 
-  await Promise.all(promises);
   return true;
 }
