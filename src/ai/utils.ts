@@ -1,7 +1,6 @@
 import env from "@/env.mjs";
 import { essayType } from "@drizzle/schema";
 import OpenAI from "openai";
-import { APIPromise } from "openai/core.mjs";
 import wait from "wait";
 
 const openai = new OpenAI({
@@ -10,7 +9,7 @@ const openai = new OpenAI({
 
 const MESSAGE_FOOTER = `What score would you give to this student in this section? please point out the mistakes that you have found and how he could improve his essay.
 
-Your response should follow this format
+Your response should follow this format and should exceed 150 words.
 
 section_score: Band <INSERT_SCORE_HERE_IN_NUMBERS>
 section_comment: <INSERT_YOUR_COMMENT_HERE>
@@ -156,7 +155,7 @@ export const gradeEssay = async (question: string, answer: string) => {
     const { choices: [response] } = await openai.chat.completions.create({
       messages: taskMessages,
       model: 'gpt-3.5-turbo',
-      max_tokens: 100
+      max_tokens: 200
     });
 
     await wait(20000);

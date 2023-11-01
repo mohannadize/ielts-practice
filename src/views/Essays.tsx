@@ -1,6 +1,7 @@
 import { essayType } from "@drizzle/schema";
 import { Cookie } from "elysia";
 import env from "@/env.mjs";
+import moment from "moment";
 
 export const Essay = ({ data }: { data: essayType }) => {
   const averageScore = data.aiResponse
@@ -23,7 +24,9 @@ export const Essay = ({ data }: { data: essayType }) => {
     {data.answer}
     <br />
     <br />
-    <small>Submitted On: {data.dateSubmitted}</small>
+    <small>Submitted: {moment(data.dateSubmitted).fromNow()}</small>
+    <br />
+    <em style={{fontSize: "0.6rem"}}>{data.dateSubmitted}</em>
     <footer>
       {data.aiResponse
         ? (
