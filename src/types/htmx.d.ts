@@ -1,4 +1,4 @@
-import type { Schema } from "..";
+type Schema = import("..").App["schema"];
 
 type RoutesByType<
   Schema extends Record<string, any>, // Ensure keys are strings
